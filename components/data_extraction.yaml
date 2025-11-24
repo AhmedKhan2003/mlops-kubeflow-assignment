@@ -1,0 +1,15 @@
+name: DataExtraction
+description: Pull dataset via DVC and output CSV path
+inputs:
+  - {name: dvc_file, type: String}
+outputs:
+  - {name: data_out, type: String}
+implementation:
+  container:
+    image: python:3.10-slim
+    command:
+      - sh
+      - -c
+      - |
+        pip install --no-cache-dir pandas dvc
+        python /src/component_runner.py data_extraction --dvc_file "{inputs.parameters.dvc_file}" --output "{outputs.parameters.data_out}"

@@ -1,0 +1,16 @@
+name: Evaluation
+description: Evaluate model on test set and write metrics
+inputs:
+  - {name: test_csv, type: String}
+  - {name: model_in, type: String}
+outputs:
+  - {name: metrics_out, type: String}
+implementation:
+  container:
+    image: python:3.10-slim
+    command:
+      - sh
+      - -c
+      - |
+        pip install --no-cache-dir pandas scikit-learn joblib
+        python /src/component_runner.py evaluate --test_csv "{inputs.parameters.test_csv}" --model_in "{inputs.parameters.model_in}" --metrics_out "{outputs.parameters.metrics_out}"

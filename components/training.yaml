@@ -1,0 +1,15 @@
+name: Training
+description: Train RandomForest and save model
+inputs:
+  - {name: train_csv, type: String}
+outputs:
+  - {name: model_out, type: String}
+implementation:
+  container:
+    image: python:3.10-slim
+    command:
+      - sh
+      - -c
+      - |
+        pip install --no-cache-dir pandas scikit-learn joblib
+        python /src/component_runner.py train_model --train_csv "{inputs.parameters.train_csv}" --model_out "{outputs.parameters.model_out}"

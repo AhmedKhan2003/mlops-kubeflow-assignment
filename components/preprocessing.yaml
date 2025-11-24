@@ -1,0 +1,16 @@
+name: Preprocessing
+description: Preprocess input CSV and produce train/test CSVs
+inputs:
+  - {name: input_csv, type: String}
+outputs:
+  - {name: train_csv, type: String}
+  - {name: test_csv, type: String}
+implementation:
+  container:
+    image: python:3.10-slim
+    command:
+      - sh
+      - -c
+      - |
+        pip install --no-cache-dir pandas scikit-learn joblib
+        python /src/component_runner.py preprocess --input "{inputs.parameters.input_csv}" --train_out "{outputs.parameters.train_csv}" --test_out "{outputs.parameters.test_csv}"
