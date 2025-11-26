@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/yourb/Documents/MLOPS%20Assignment/mlops-kubeflow-assignment/mlruns/665198404805873009/8ba391a32dff40d5ba1e2979b4ea357a/artifacts
+end_time: 1764176594439
+entry_point_name: ''
+experiment_id: '665198404805873009'
+lifecycle_stage: active
+run_id: 8ba391a32dff40d5ba1e2979b4ea357a
+run_name: orderly-lark-21
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764176590640
+status: 3
+tags: []
+user_id: yourb

@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Users/yourb/Documents/MLOPS%20Assignment/mlops-kubeflow-assignment/mlruns/665198404805873009/models/m-dfd306d025f74af2a9e3ba538e27c4df/artifacts
+creation_timestamp: 1764176561218
+experiment_id: '665198404805873009'
+last_updated_timestamp: 1764176568169
+model_id: m-dfd306d025f74af2a9e3ba538e27c4df
+model_type: null
+name: model
+source_run_id: 9e99a47e85464327afcc6060e62d5149
+status: 2
+status_message: null

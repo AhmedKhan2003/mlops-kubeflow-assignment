@@ -1,0 +1,22 @@
+artifact_path: file:C:/Users/yourb/Documents/MLOPS Assignment/mlops-kubeflow-assignment/mlruns/2/models/m-51afe88ba0854e6fb3baf4be48f160bd/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.9
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+mlflow_version: 3.6.0
+model_id: m-51afe88ba0854e6fb3baf4be48f160bd
+model_size_bytes: 350977
+model_uuid: m-51afe88ba0854e6fb3baf4be48f160bd
+prompts: null
+run_id: da8d124f4bc74861a5250c67ef03033c
+utc_time_created: '2025-11-26 17:07:10.703198'

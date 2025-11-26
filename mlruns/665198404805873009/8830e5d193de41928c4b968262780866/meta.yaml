@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/yourb/Documents/MLOPS%20Assignment/mlops-kubeflow-assignment/mlruns/665198404805873009/8830e5d193de41928c4b968262780866/artifacts
+end_time: 1764176590620
+entry_point_name: ''
+experiment_id: '665198404805873009'
+lifecycle_stage: active
+run_id: 8830e5d193de41928c4b968262780866
+run_name: calm-doe-589
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764176587017
+status: 3
+tags: []
+user_id: yourb

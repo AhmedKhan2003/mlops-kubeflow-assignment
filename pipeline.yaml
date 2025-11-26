@@ -1,0 +1,175 @@
+# PIPELINE DEFINITION
+# Name: housing-pipeline
+# Description: Pipeline: extract -> preprocess -> train -> evaluate
+# Inputs:
+#    dvc_file: str [Default: 'data/raw_data.csv']
+components:
+  comp-dataextraction:
+    executorLabel: exec-dataextraction
+    inputDefinitions:
+      parameters:
+        dvc_file:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        data_out:
+          parameterType: STRING
+  comp-evaluation:
+    executorLabel: exec-evaluation
+    inputDefinitions:
+      parameters:
+        model_in:
+          parameterType: STRING
+        test_csv:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        metrics_out:
+          parameterType: STRING
+  comp-preprocessing:
+    executorLabel: exec-preprocessing
+    inputDefinitions:
+      parameters:
+        input_csv:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        test_csv:
+          parameterType: STRING
+        train_csv:
+          parameterType: STRING
+  comp-training:
+    executorLabel: exec-training
+    inputDefinitions:
+      parameters:
+        train_csv:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        model_out:
+          parameterType: STRING
+deploymentSpec:
+  executors:
+    exec-dataextraction:
+      container:
+        command:
+        - sh
+        - -c
+        - 'pip install --no-cache-dir pandas dvc
+
+          python /src/component_runner.py data_extraction --dvc_file "{inputs.parameters.dvc_file}"
+          --output "{outputs.parameters.data_out}"
+
+          '
+        image: python:3.10-slim
+    exec-evaluation:
+      container:
+        command:
+        - sh
+        - -c
+        - 'pip install --no-cache-dir pandas scikit-learn joblib
+
+          python /src/component_runner.py evaluate --test_csv "{inputs.parameters.test_csv}"
+          --model_in "{inputs.parameters.model_in}" --metrics_out "{outputs.parameters.metrics_out}"
+
+          '
+        image: python:3.10-slim
+    exec-preprocessing:
+      container:
+        command:
+        - sh
+        - -c
+        - 'pip install --no-cache-dir pandas scikit-learn joblib
+
+          python /src/component_runner.py preprocess --input "{inputs.parameters.input_csv}"
+          --train_out "{outputs.parameters.train_csv}" --test_out "{outputs.parameters.test_csv}"
+
+          '
+        image: python:3.10-slim
+    exec-training:
+      container:
+        command:
+        - sh
+        - -c
+        - 'pip install --no-cache-dir pandas scikit-learn joblib
+
+          python /src/component_runner.py train_model --train_csv "{inputs.parameters.train_csv}"
+          --model_out "{outputs.parameters.model_out}"
+
+          '
+        image: python:3.10-slim
+pipelineInfo:
+  description: 'Pipeline: extract -> preprocess -> train -> evaluate'
+  name: housing-pipeline
+root:
+  dag:
+    tasks:
+      dataextraction:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-dataextraction
+        inputs:
+          parameters:
+            dvc_file:
+              componentInputParameter: dvc_file
+        taskInfo:
+          name: dataextraction
+      evaluation:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-evaluation
+        dependentTasks:
+        - preprocessing
+        - training
+        inputs:
+          parameters:
+            model_in:
+              taskOutputParameter:
+                outputParameterKey: model_out
+                producerTask: training
+            test_csv:
+              taskOutputParameter:
+                outputParameterKey: test_csv
+                producerTask: preprocessing
+        taskInfo:
+          name: evaluation
+      preprocessing:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-preprocessing
+        dependentTasks:
+        - dataextraction
+        inputs:
+          parameters:
+            input_csv:
+              taskOutputParameter:
+                outputParameterKey: data_out
+                producerTask: dataextraction
+        taskInfo:
+          name: preprocessing
+      training:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-training
+        dependentTasks:
+        - preprocessing
+        inputs:
+          parameters:
+            train_csv:
+              taskOutputParameter:
+                outputParameterKey: train_csv
+                producerTask: preprocessing
+        taskInfo:
+          name: training
+  inputDefinitions:
+    parameters:
+      dvc_file:
+        defaultValue: data/raw_data.csv
+        isOptional: true
+        parameterType: STRING
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.14.6

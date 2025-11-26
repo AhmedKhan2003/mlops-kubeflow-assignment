@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/yourb/Documents/MLOPS%20Assignment/mlops-kubeflow-assignment/mlruns/665198404805873009/0d092b5c4246477aa71aaddf3febea07/artifacts
+end_time: 1764176586996
+entry_point_name: ''
+experiment_id: '665198404805873009'
+lifecycle_stage: active
+run_id: 0d092b5c4246477aa71aaddf3febea07
+run_name: rogue-auk-204
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764176581687
+status: 3
+tags: []
+user_id: yourb

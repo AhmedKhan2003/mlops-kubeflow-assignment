@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/yourb/Documents/MLOPS%20Assignment/mlops-kubeflow-assignment/mlruns/665198404805873009/9e99a47e85464327afcc6060e62d5149/artifacts
+end_time: 1764176568189
+entry_point_name: ''
+experiment_id: '665198404805873009'
+lifecycle_stage: active
+run_id: 9e99a47e85464327afcc6060e62d5149
+run_name: exultant-cod-588
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764176561060
+status: 3
+tags: []
+user_id: yourb
