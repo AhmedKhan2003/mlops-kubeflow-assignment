@@ -1,36 +1,37 @@
+import os
 import mlflow
-import mlflow.sklearn
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_boston
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import mean_squared_error
+import joblib
+import pandas as pd
 
-# 1. Connect to MLflow server
-mlflow.set_tracking_uri("http://localhost:5000")
+# Use file-based MLflow tracking if running in CI
+if os.getenv("GITHUB_ACTIONS"):
+    mlflow.set_tracking_uri("file:///tmp/mlruns")
+else:
+    mlflow.set_tracking_uri("http://localhost:5000")  # Local MLflow server for local runs
+
 mlflow.set_experiment("MLOps_Assignment_Experiment")
 
-# 2. Hyperparameters
-params_list = [
-    {"n_estimators": 50, "max_depth": 3},
-    {"n_estimators": 100, "max_depth": 5},
-    {"n_estimators": 200, "max_depth": 7}
-]
+# Example MLflow run
+with mlflow.start_run():
+    # Load dataset
+    data = load_boston()
+    X = pd.DataFrame(data.data, columns=data.feature_names)
+    y = pd.Series(data.target)
 
-# 3. Load data
-X, y = load_iris(return_X_y=True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# 4. Loop through runs
-for params in params_list:
-    with mlflow.start_run():
-        model = RandomForestClassifier(**params)
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        acc = accuracy_score(y_test, y_pred)
+    # Train model
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X_train, y_train)
 
-        # Log params, metrics, and model
-        mlflow.log_params(params)
-        mlflow.log_metric("accuracy", acc)
-        mlflow.sklearn.log_model(model, name="model")
+    # Evaluate
+    preds = model.predict(X_test)
+    mse = mean_squared_error(y_test, preds)
 
-        print(f"Run complete with params {params} and accuracy {acc:.4f}")
+    # Log model and metrics
+    mlflow.log_metric("mse", mse)
+    mlflow.sklearn.log_model(model, "random_forest_model")
