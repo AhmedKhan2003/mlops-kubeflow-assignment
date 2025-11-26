@@ -1,24 +1,41 @@
-name: CI
+name: MLflow Experiment Run
+
+# Trigger the workflow on push to main or any branch
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - develop
 
 jobs:
-  build:
+  run-experiments:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
+      # Step 1: Checkout the repo
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: 3.11
+
+      # Step 3: Install dependencies
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: DVC status
-        run: dvc status
-      - name: Compile components & pipeline
         run: |
-          python src/compile_components.py
-          python pipeline.py
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Run MLflow experiments
+      - name: Run MLflow experiments
+        run: |
+          python mlflow_assignment.py
+
+      # Step 5: Optional - save mlruns as artifact
+      - name: Upload MLflow artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: mlruns
+          path: ./mlruns
